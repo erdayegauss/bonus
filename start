@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+OSTYPE=`uname -m`
+
+function cleanup ()
+    {
+
+
+      CONTAINER_IDS=$(docker ps | grep "dev\|bonus\|example\|mysql\|ca_peer" | awk '{print $1}')
+echo
+      if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" = " " ]; then
+              echo "========== No containers available for deletion =========="
+      else
+#              docker rm -f $CONTAINER_IDS
+              docker rm -f $(docker ps -qa)
+      fi
+echo
+
+
+      DOCKER_IMAGE_IDS=$(docker images | grep "war\|dev" | awk '{print $3}')
+      echo
+      if [ -z "$DOCKER_IMAGE_IDS" -o "$DOCKER_IMAGE_IDS" = " " ]; then
+              echo "========== No images available for deletion ==========="
+      else
+              docker rmi -f $DOCKER_IMAGE_IDS
+      fi
+      echo
+
+    }
+
+
+cleanup
+
+docker volume create mysql-db
+
+if [[ "$OSTYPE" == "s390x" ]]; then
+
+  docker-compose -f docker-compose390.yml up -d
+
+sleep 10s
+
+docker exec -it mysql bash -c 'mysql -uroot  < docker-entrypoint-initdb.d/bonuspointsexchange.sql' 
+
+else
+
+  docker-compose up -d
+
+fi
+
+sleep 10s
+
+#java -cp client.jar org.app.network.CreateChannel
+#java -cp client.jar org.app.network.DeployInstantiateChaincode
+#java -cp client.jar org.app.user.RegisterEnrollUser
+#java -cp client.jar org.app.chaincode.invocation.InvokeChaincode 12 13 0 0
+
