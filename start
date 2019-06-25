@@ -50,8 +50,8 @@ fi
 
 sleep 10s
 
-#java -cp client.jar org.app.network.CreateChannel
-#java -cp client.jar org.app.network.DeployInstantiateChaincode
-#java -cp client.jar org.app.user.RegisterEnrollUser
-#java -cp client.jar org.app.chaincode.invocation.InvokeChaincode 12 13 0 0
+java -cp client.jar org.app.network.CreateChannel
+java -cp client.jar org.app.network.DeployInstantiateChaincode
+java -cp client.jar org.app.user.RegisterEnrollUser
+java -cp client.jar org.app.chaincode.invocation.InvokeChaincode 12 13 0 0
 
